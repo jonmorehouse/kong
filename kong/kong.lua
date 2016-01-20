@@ -126,11 +126,11 @@ local Kong = {}
 -- If any error happens during the initialization of the DAO or plugins,
 -- it return an nginx error and exit.
 function Kong.init()
-  local status, err = pcall(function() 
+  local status, err = pcall(function()
       configuration = config_loader.load(os.getenv("KONG_CONF"))
       serf = Serf(configuration)
       events = Events()
-      dao = dao_loader.load(configuration, true, events)
+      dao = dao_loader.load(configuration, events, true)
       loaded_plugins = load_node_plugins(configuration)
 
       -- Attach core hooks
