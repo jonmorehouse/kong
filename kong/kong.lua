@@ -130,7 +130,7 @@ function Kong.init()
       configuration = config_loader.load(os.getenv("KONG_CONF"))
       serf = Serf(configuration)
       events = Events()
-      dao = dao_loader.load(configuration, events, true)
+      dao = dao_loader.load(configuration, events)
       loaded_plugins = load_node_plugins(configuration)
 
       -- Attach core hooks
