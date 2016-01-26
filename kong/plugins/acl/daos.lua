@@ -14,6 +14,7 @@ end
 
 local SCHEMA = {
   primary_key = {"id"},
+  table = "acls",
   fields = {
     id = { type = "id", dao_insert_value = true },
     created_at = { type = "timestamp", dao_insert_value = true },
@@ -28,7 +29,7 @@ local SCHEMA = {
 local ACLs = BaseDao:extend()
 
 function ACLs:new(...)
-  ACLs.super.new(self, "acls", SCHEMA, ...)
+  ACLs.super.new(self, SCHEMA, ...)
 end
 
 return {acls = ACLs}
