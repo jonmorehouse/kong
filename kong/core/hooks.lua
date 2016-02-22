@@ -84,9 +84,9 @@ local function member_update(message_t, is_reap)
     return
   end
 
-  local nodes, err = dao.nodes:find_by_keys({
+  local nodes, err = dao.nodes:find_all {
     name = member.name
-  })
+  }
   if err then
     ngx.log(ngx.ERR, tostring(err))
     return
@@ -103,7 +103,7 @@ local function member_update(message_t, is_reap)
   end
 
   if is_reap and dao.nodes:count_by_keys({}) > 1 then
-    -- Purge the cache when a failed node re-appears 
+    -- Purge the cache when a failed node re-appears
     cache.delete_all()
   end
 end
@@ -115,9 +115,9 @@ local function member_join(message_t)
     return
   end
 
-  local nodes, err = dao.nodes:find_by_keys({
+  local nodes, err = dao.nodes:find_all {
     name = member.name
-  })
+  }
   if err then
     ngx.log(ngx.ERR, tostring(err))
     return

@@ -31,9 +31,9 @@ local function async_autojoin(premature)
   })
   local elapsed = lock:lock("async_autojoin")
   if elapsed and elapsed == 0 then
-    -- If the current member count on this node's cluster is 1, but there are more than 1 active nodes in 
+    -- If the current member count on this node's cluster is 1, but there are more than 1 active nodes in
     -- the DAO, then try to join them
-    local count, err = dao.nodes:count_by_keys()
+    local count, err = dao.nodes:count()
     if err then
       ngx.log(ngx.ERR, tostring(err))
     elseif count > 1 then
@@ -73,7 +73,7 @@ local function send_keepalive(premature)
   if elapsed and elapsed == 0 then
     -- Send keepalive
     local node_name = cluster_utils.get_node_name(configuration)
-    local nodes, err = dao.nodes:find_by_keys({name = node_name})
+    local nodes, err = dao.nodes:find_all {name = node_name}
     if err then
       ngx.log(ngx.ERR, tostring(err))
     elseif #nodes == 1 then
