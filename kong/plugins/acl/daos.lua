@@ -1,5 +1,3 @@
-local BaseDao = require "kong.dao.cassandra.base_dao"
-
 local function check_unique(group, acl)
   -- If dao required to make this work in integration tests when adding fixtures
   if dao and acl.consumer_id and group then
@@ -26,10 +24,4 @@ local SCHEMA = {
   end
 }
 
-local ACLs = BaseDao:extend()
-
-function ACLs:new(...)
-  ACLs.super.new(self, SCHEMA, ...)
-end
-
-return {acls = ACLs}
+return {acls = SCHEMA}

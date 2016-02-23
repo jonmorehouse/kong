@@ -1,4 +1,3 @@
-local BaseDao = require "kong.dao.cassandra.base_dao"
 local crypto = require "kong.plugins.basic-auth.crypto"
 
 local function encrypt_password(password, credential)
@@ -29,14 +28,8 @@ local SCHEMA = {
     password = {type = "string", func = encrypt_password}
   },
   marshall_event = function(self, t)
-    return { id = t.id, consumer_id = t.consumer_id, username = t.username }
+    return {id = t.id, consumer_id = t.consumer_id, username = t.username}
   end
 }
 
-local BasicAuthCredentials = BaseDao:extend()
-
-function BasicAuthCredentials:new(...)
-  BasicAuthCredentials.super.new(self, SCHEMA, ...)
-end
-
-return {basicauth_credentials = BasicAuthCredentials}
+return {basicauth_credentials = SCHEMA}
