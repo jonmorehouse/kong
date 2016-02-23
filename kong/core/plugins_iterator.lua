@@ -14,9 +14,9 @@ local table_remove = table.remove
 local function load_plugin_configuration(api_id, consumer_id, plugin_name)
   local cache_key = cache.plugin_key(plugin_name, api_id, consumer_id)
   local plugin = cache.get_or_set(cache_key, function()
-    local rows, err = dao.plugins:find_by_keys {
+    local rows, err = dao.plugins:find_all {
       api_id = api_id,
-      consumer_id = consumer_id ~= nil and consumer_id or constants.DATABASE_NULL_ID,
+      consumer_id = consumer_id ~= nil and consumer_id or nil,
       name = plugin_name
     }
     if err then
