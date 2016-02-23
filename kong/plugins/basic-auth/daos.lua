@@ -6,7 +6,7 @@ local function encrypt_password(password, credential)
   -- TODO: Better handle this scenario
   if credential.id then
     if dao then -- Check to make this work with tests
-      local result = dao.basicauth_credentials:find_by_primary_key({id=credential.id})
+      local result = dao.basicauth_credentials:find {id = credential.id}
       if result and result.password == credential.password then
         return true
       end

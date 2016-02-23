@@ -64,7 +64,7 @@ local function get_redirect_uri(client_id)
   local client
   if client_id then
     client = cache.get_or_set(cache.oauth2_credential_key(client_id), function()
-      local credentials, err = dao.oauth2_credentials:find_by_keys { client_id = client_id }
+      local credentials, err = dao.oauth2_credentials:find_all {client_id = client_id}
       local result
       if err then
         return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
@@ -262,7 +262,7 @@ local function issue_token(conf)
     if not response_params[ERROR] then
       if grant_type == GRANT_AUTHORIZATION_CODE then
         local code = parameters[CODE]
-        local authorization_code = code and dao.oauth2_authorization_codes:find_by_keys({code = code})[1] or nil
+        local authorization_code = code and dao.oauth2_authorization_codes:find_all({code = code})[1] or nil
         if not authorization_code then
           response_params = {[ERROR] = "invalid_request", error_description = "Invalid "..CODE}
         else
@@ -298,7 +298,7 @@ local function issue_token(conf)
         end
       elseif grant_type == GRANT_REFRESH_TOKEN then
         local refresh_token = parameters[REFRESH_TOKEN]
-        local token = refresh_token and dao.oauth2_tokens:find_by_keys({refresh_token = refresh_token})[1] or nil
+        local token = refresh_token and dao.oauth2_tokens:find_all({refresh_token = refresh_token})[1] or nil
         if not token then
           response_params = {[ERROR] = "invalid_request", error_description = "Invalid "..REFRESH_TOKEN}
         else
@@ -323,7 +323,7 @@ local function retrieve_token(access_token)
   local token
   if access_token then
     token = cache.get_or_set(cache.oauth2_token_key(access_token), function()
-      local credentials, err = dao.oauth2_tokens:find_by_keys { access_token = access_token }
+      local credentials, err = dao.oauth2_tokens:find_all { access_token = access_token }
       local result
       if err then
         return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
@@ -411,7 +411,7 @@ function _M.execute(conf)
 
   -- Retrive the credential from the token
   local credential = cache.get_or_set(cache.oauth2_credential_key(token.credential_id), function()
-    local result, err = dao.oauth2_credentials:find_by_primary_key({id = token.credential_id})
+    local result, err = dao.oauth2_credentials:find {id = token.credential_id}
     if err then
       return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
     end
@@ -420,7 +420,7 @@ function _M.execute(conf)
 
   -- Retrive the consumer from the credential
   local consumer = cache.get_or_set(cache.consumer_key(credential.consumer_id), function()
-    local result, err = dao.consumers:find_by_primary_key({id = credential.consumer_id})
+    local result, err = dao.consumers:find {id = credential.consumer_id}
     if err then
       return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
     end
