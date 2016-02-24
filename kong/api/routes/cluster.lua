@@ -36,7 +36,7 @@ return {
       if err then
         return responses.send_HTTP_BAD_REQUEST(err)
       end
-      
+
       return responses.send_HTTP_OK()
     end,
 
@@ -49,13 +49,14 @@ return {
       if err then
         return responses.send_HTTP_BAD_REQUEST(err)
       end
-      
+
       return responses.send_HTTP_OK()
     end
   },
-  
+
   ["/cluster/events/"] = {
     POST = function(self, dao_factory)
+
       local message_t = self.params
 
       -- The type is always upper case
@@ -64,9 +65,9 @@ return {
       end
 
       -- If it's an update, load the new entity too so it's available in the hooks
-      if message_t.type == events.TYPES.ENTITY_UPDATED then
+      if message_t.type == events.TYPES.ENTITY_UPDATED and message_t.entity and utils.table_size(message_t.entity) > 0 then
         message_t.old_entity = message_t.entity
-        message_t.entity = dao[message_t.collection]:find_by_primary_key({id = message_t.old_entity.id})
+        message_t.entity = dao[message_t.collection]:find_all {id = message_t.old_entity.id}
         if not message_t.entity then
           -- This means that the entity has been deleted immediately after an update in the meanwhile that
           -- the system was still processing the update. A delete invalidation will come immediately after
@@ -74,7 +75,7 @@ return {
           return responses.send_HTTP_OK()
         end
       end
-      
+
       -- Trigger event in the node
       events:publish(message_t.type, message_t)
 

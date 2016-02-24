@@ -78,7 +78,7 @@ local function send_keepalive(premature)
       ngx.log(ngx.ERR, tostring(err))
     elseif #nodes == 1 then
       local node = table.remove(nodes, 1)
-      local _, err = dao.nodes:update(node)
+      local _, err = dao.nodes:update(node, node)
       if err then
         ngx.log(ngx.ERR, tostring(err))
       end
