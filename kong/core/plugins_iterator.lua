@@ -1,5 +1,4 @@
 local cache = require "kong.tools.database_cache"
-local constants = require "kong.constants"
 local responses = require "kong.tools.responses"
 
 local table_remove = table.remove
@@ -41,8 +40,8 @@ end
 -- @param[type=boolean] is_access_or_certificate_context Tells if the context is access_by_lua_block. We don't use `ngx.get_phase()` simply because we can avoid it.
 -- @treturn function iterator
 local function iter_plugins_for_req(loaded_plugins, is_access_or_certificate_context)
-  if not ngx.ctx.plugins_for_request then 
-    ngx.ctx.plugins_for_request = {} 
+  if not ngx.ctx.plugins_for_request then
+    ngx.ctx.plugins_for_request = {}
   end
 
   local i = 0
