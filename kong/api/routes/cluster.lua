@@ -1,4 +1,5 @@
 local responses = require "kong.tools.responses"
+local utils = require "kong.tools.utils"
 
 local pairs = pairs
 local table_insert = table.insert
