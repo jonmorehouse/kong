@@ -163,6 +163,8 @@ end
 function Kong.init_worker()
   core.init_worker.before()
 
+  dao:init() -- Executes any initialization by the DB
+
   for _, plugin in ipairs(loaded_plugins) do
     plugin.handler:init_worker()
   end
