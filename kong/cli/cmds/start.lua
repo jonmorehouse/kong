@@ -49,8 +49,10 @@ end
 logger:success("Started"..((configuration.daemon) and "" or " in foreground mode"))
 
 if not configuration.daemon then
+  local unistd = require "posix.unistd"
   while(true) do
     io.read()
+    unistd.sleep(1)
   end
 end
 
